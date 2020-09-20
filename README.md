@@ -1,5 +1,6 @@
 # shopUI
-UI is created in ReactJs ,that is intracting with my local Laravel end point
+UI is created in ReactJs ,that is intracting with my local Laravel end point.
+
 Steps for up and running
 1- clone
 2- npm install
