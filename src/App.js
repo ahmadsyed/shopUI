@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/Header/Header';
 import LoginForm from './components/LoginForm/LoginForm';
 import Home from './components/Home/Home';
-import Cart from './components/Cart/Cart';
+import Routers from './components/Routers/Routers';
 import Success from './components/Success/Success';
 import PrivateRoute from './utils/PrivateRoute';
 import {
@@ -30,8 +30,8 @@ function App() {
             <Route path="/login">
               <LoginForm showError={updateErrorMessage} updateTitle={updateTitle}/>
             </Route>
-            <PrivateRoute path="/cart">
-              <Cart updateTitle={updateTitle}/>
+            <PrivateRoute path="/Routers">
+              <Routers updateTitle={updateTitle}/>
             </PrivateRoute>
             <PrivateRoute path="/success">
               <Success updateTitle={updateTitle}/>

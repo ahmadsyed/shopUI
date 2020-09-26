@@ -2,7 +2,7 @@ import React,{ useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../../constants/apiContants';
 import axios from 'axios'
-function Cart(props) {
+function Routers(props) {
     const[items,setItems] = useState([]);
     function handleBuyNow() {
       const token = localStorage.getItem(ACCESS_TOKEN_NAME);
@@ -46,19 +46,9 @@ function Cart(props) {
     }
     return(
         <div className="mt-2">
-            { items.length >0 &&(
-              items.map(item=>(
-                <div className='item-div-cart' key={item.id}>
-                    <img src={item.img_path} className='item-image'/>
-                    <p className='item-description'>{item.title}</p>
-                    <p className='item-description price'>{item.price+' $'}</p>
-                </div>
-              ))
-            )
-            }
             {
               items.length ==0 &&(
-                <div>Please Add new Items in cart</div>
+                <div>Please Add new Router in list</div>
               )
             }
             { items.length >0 &&(
@@ -69,4 +59,4 @@ function Cart(props) {
     )
 }
 
-export default withRouter(Cart);
+export default withRouter(Routers);

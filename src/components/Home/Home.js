@@ -1,79 +1,110 @@
-import React,{ useEffect, useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { ACCESS_TOKEN_NAME, API_BASE_URL } from '../../constants/apiContants';
-import axios from 'axios'
-import './Home.css';
+import React, {useState} from 'react';
+import axios from 'axios';
+import '../LoginForm/LoginForm.css';
+import {API_BASE_URL, ACCESS_TOKEN_NAME} from '../../constants/apiContants';
+import { withRouter } from "react-router-dom";
+
 function Home(props) {
-    const[items,setItems] = useState([]);
-    const[cartItems,setCartItems] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    function handleAddToCart(item) {
-      //console.log('item',item);
-      cartItems.push(item);
-      //console.log('cart-data',cartItems);
-      setCartItems(cartItems);
-      const payload={
-        "items":cartItems
-      }
-      const token = localStorage.getItem(ACCESS_TOKEN_NAME);
-      axios.post(API_BASE_URL+'/add-to-cart',payload, { headers: { 'Authorization': "Bearer "+token }})
-        .then(function (response) {
-            if(response.status !== 200){
-              console.log(response);
-            }
-            else{
-              alert('1 quntity added successfully');
-            }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    const [state , setState] = useState({
+        sapid : "12:12:34:65-e3:t5:87:54",
+        hostname : "192.168.0.1",
+        loopback: '192.168.1.1',
+        mac_address:'00:1A:C2:7B:00:47',
+        successMessage: null
+    })
+    const handleChange = (e) => {
+        const {id , value} = e.target   
+        setState(prevState => ({
+            ...prevState,
+            [id] : value
+        }))
     }
 
-    useEffect(() => {
-        axios.get('https://fakestoreapi.com/products?limit=20', { headers: { 'token': localStorage.getItem(ACCESS_TOKEN_NAME) }})
-        .then(function (response) {
-          console.log(response)
-            if(response.status !== 200){
-              redirectToLogin()
-            }
-            else{
-              if(response.data.toString() !== items.toString()){
-                setItems(response.data);
-              }
-            }
-        })
-        .catch(function (error) {
-          redirectToLogin()
-        });
+    const handleSubmitClick = (e) => {
+        e.preventDefault();
         const token = localStorage.getItem(ACCESS_TOKEN_NAME);
-        setIsLoggedIn(token?true:false);
-      },[isLoggedIn])
-    function redirectToLogin() {
-      //props.updateTitle('Login')
-      props.history.push('/login');
+        const payload={
+            "sapid":state.sapid,
+            "hostname":state.hostname,
+            "loopback":state.loopback,
+            "mac_address":state.mac_address,
+        }
+        axios.post(API_BASE_URL+'/add-router', payload,{ headers: { 'Authorization': "Bearer "+token  }})
+            .then(function (response) {
+                if(response.status === 200){
+                    setState(prevState => ({
+                        ...prevState,
+                        'successMessage' : 'Router added successfully'
+                    }))
+                    redirectToRouters();
+                    props.showError(null)
+                }
+                else{
+                    props.showError("something went wrong");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    const redirectToRouters = () => {
+        //props.updateTitle('Routers')
+        props.history.push('/Routers');
     }
     return(
-        <div className="mt-2">
-          {
-            !isLoggedIn &&(
-              <div>
-              <p className="loginText">Hello Guest</p> 
-              <p className='item-description price'>Please login to add items in cart</p>
-              <span className="loginText" onClick={() => redirectToLogin()}>Login here</span> 
-              </div>
-            )
-          }
-            {
-              items.map(item=>(
-                <div className='item-div' key={item.id}>
-                    <img src={item.image} className='item-image'/>
-                    <p className='item-description'>{item.title}</p>
-                    <p className='item-description price'>{item.price+' $'}</p>
-                    <button className="btn btn-primary" disabled={!isLoggedIn} onClick={() => handleAddToCart(item)}>Add To Cart</button>
+        <div className="card col-12 col-lg-4 login-card mt-2 hv-center">
+            <form>
+                <div className="form-group text-left">
+                <label htmlFor="exampleInputEmail1">Sap ID</label>
+                <input type="text" 
+                       className="form-control" 
+                       id="sapid" 
+                       placeholder="sap ID" 
+                       value={state.sapid}
+                       onChange={handleChange}
+                />
                 </div>
-              ))
-            }
+                <div className="form-group text-left">
+                <label htmlFor="exampleInputPassword1">Host Name</label>
+                <input type="text" 
+                       className="form-control" 
+                       id="host" 
+                       placeholder="Host Name"
+                       value={state.hostname}
+                       onChange={handleChange} 
+                />
+                </div>
+                <div className="form-group text-left">
+                <label htmlFor="exampleInputPassword1">Loopback</label>
+                <input type="text" 
+                       className="form-control" 
+                       id="loopback" 
+                       placeholder="Loopback"
+                       value={state.loopback}
+                       onChange={handleChange} 
+                />
+                </div>
+                <div className="form-group text-left">
+                <label htmlFor="exampleInputPassword1">Mac Address</label>
+                <input type="text" 
+                       className="form-control" 
+                       id="mac" 
+                       placeholder="Mac Address"
+                       value={state.mac_address}
+                       onChange={handleChange} 
+                />
+                </div>
+                <div className="form-check">
+                </div>
+                <button 
+                    type="submit" 
+                    className="btn btn-primary"
+                    onClick={handleSubmitClick}
+                >Submit</button>
+            </form>
+            <div className="alert alert-success mt-2" style={{display: state.successMessage ? 'block' : 'none' }} role="alert">
+                {state.successMessage}
+            </div>
         </div>
     )
 }

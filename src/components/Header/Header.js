@@ -48,7 +48,7 @@ function Header(props) {
         props.history.push('/login')
     }
     function goToCart() {
-        props.history.push('/cart')
+        //props.history.push('/cart')
     }
     function goToHome(){
         props.history.push('/')
