@@ -1,4 +1,5 @@
-# shopUI
+# RouterUI
+This repo is containg intractions with laravel API using Ajax (axio api).It is having all required features such as token based auth , crud UI etc. You may find releavent code in src folder.
 UI is created in ReactJs ,that is intracting with my local Laravel end point
 Steps for up and running
 1- clone
